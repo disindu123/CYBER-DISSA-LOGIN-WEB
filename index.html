@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CYBER DISSA OFc</title>
+    <title>CYBER DISSA LOGIN</title>
     <style>
         body {
             margin: 0;
@@ -85,21 +85,24 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            padding: 20px;
+            background: rgba(0, 0, 0, 0.95);
+            padding: 30px;
             color: #33ff33;
             font-family: "Courier New", Courier, monospace;
             text-align: center;
-            border: 2px solid #33ff33;
-            border-radius: 10px;
-            box-shadow: 0 0 15px #33ff33;
-            animation: fadeInScale 1s ease-in-out;
+            border: 3px solid #33ff33;
+            border-radius: 15px;
+            box-shadow: 0 0 30px #33ff33;
+            animation: fadeInScale 0.7s ease-in-out;
             z-index: 10;
+            font-size: 1.5rem;
+            max-width: 500px;
+            line-height: 1.5;
         }
         .popup.error {
             color: #ff3333;
             border-color: #ff3333;
-            box-shadow: 0 0 15px #ff3333;
+            box-shadow: 0 0 30px #ff3333;
         }
         .popup.success {
             color: #33ff33;
@@ -140,12 +143,12 @@
     </div>
 
     <audio id="clickSound" src="./assets/Click.mp3"></audio>
-    <audio id="hackerVoice" src="./assets/Hacker.mp3"></audio>
+    <audio id="hackerVoice" src="./assets/Hacker.mp3" preload="auto"></audio>
     <audio id="successVoice" src="./assets/Successful.mp3"></audio>
     <audio id="errorVoice" src="./assets/Invalid.mp3"></audio>
 
     <script>
-        // Matrix background animation
+        // Matrix background animation with fade effect
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -165,6 +168,7 @@
                 const text = chars.charAt(Math.floor(Math.random() * chars.length));
                 ctx.fillStyle = Math.random() > 0.5 ? "#33ff33" : "#ff3333";
                 ctx.font = `${fontSize}px Courier New`;
+                ctx.globalAlpha = Math.random() * 0.8 + 0.2; // Fading effect
                 ctx.fillText(text, x * fontSize, y * fontSize);
 
                 if (y * fontSize > canvas.height && Math.random() > 0.975) {
@@ -183,7 +187,8 @@
 
         // Play hacker voice on page load
         window.onload = () => {
-            document.getElementById('hackerVoice').play();
+            const hackerVoice = document.getElementById('hackerVoice');
+            hackerVoice.play().catch(error => console.warn('Autoplay failed:', error));
         };
 
         // Create dynamic popup
@@ -197,7 +202,7 @@
                 popup.style.opacity = "0";
                 popup.style.transform = "scale(0.9)";
                 setTimeout(() => popup.remove(), 500);
-            }, 2000);
+            }, 4500); // Show popup for 4.5 seconds
         }
 
         // Handle login form submission
@@ -216,8 +221,8 @@
                 successVoice.play();
                 showPopup("Login Successful! Redirecting...", "success");
                 setTimeout(() => {
-                    window.location.href = "https://disindu123.github.io/Disindu-web/"; // Replace with your destination URL
-                }, 2000);
+                    window.location.href = "https://disindu123.github.io/Disindu-web/";
+                }, 5000); // Redirect after 5 seconds
             } else {
                 errorVoice.play();
                 showPopup("Invalid username or password! Try again.", "error");
