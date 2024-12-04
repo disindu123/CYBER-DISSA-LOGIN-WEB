@@ -50,8 +50,8 @@
             transition: border-color 0.3s ease-in-out;
         }
         .login-container input:focus {
-            border-color: #00ff00;
-            animation: pulse 1s infinite;
+            border-color: #ff0000;
+            animation: pulse-red 1s infinite;
         }
         .login-container input::placeholder {
             color: #66ff66;
@@ -79,26 +79,51 @@
             font-size: 0.9rem;
             color: #66ff66;
         }
+        /* Pop-up styles */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            color: #33ff33;
+            font-family: "Courier New", Courier, monospace;
+            text-align: center;
+            border: 2px solid #33ff33;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #33ff33;
+            animation: fadeInScale 1s ease-in-out;
+            z-index: 10;
+        }
+        .popup.error {
+            color: #ff3333;
+            border-color: #ff3333;
+            box-shadow: 0 0 15px #ff3333;
+        }
+        .popup.success {
+            color: #33ff33;
+        }
         /* Glitch animation for the heading */
         @keyframes glitch-animation {
-            0% { text-shadow: 2px 2px 1px #00ff00, -2px -2px 1px #00ff00; }
-            50% { text-shadow: -2px -2px 1px #ff0000, 2px 2px 1px #ff0000; }
-            100% { text-shadow: 2px 2px 1px #00ff00, -2px -2px 1px #00ff00; }
+            0% { text-shadow: 2px 2px 1px #00ff00, -2px -2px 1px #ff0000; }
+            50% { text-shadow: -2px -2px 1px #ff0000, 2px 2px 1px #00ff00; }
+            100% { text-shadow: 2px 2px 1px #00ff00, -2px -2px 1px #ff0000; }
         }
-        /* Fade-in animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        /* Pulsing animation for input focus */
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 5px #00ff00; }
-            50% { box-shadow: 0 0 15px #00ff00; }
+        /* Pulsing red animation for input focus */
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 5px #ff0000; }
+            50% { box-shadow: 0 0 15px #ff0000; }
         }
         /* Glowing button animation */
         @keyframes button-glow {
             0%, 100% { box-shadow: 0 0 5px #33ff33; }
             50% { box-shadow: 0 0 15px #33ff33; }
+        }
+        /* Fade-in with scaling */
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
@@ -114,7 +139,6 @@
         <p>Unauthorized access is prohibited.</p>
     </div>
 
-    <!-- Audio Files -->
     <audio id="clickSound" src="./assets/Click.mp3"></audio>
     <audio id="hackerVoice" src="./assets/Hacker.mp3"></audio>
     <audio id="successVoice" src="./assets/Successful.mp3"></audio>
@@ -137,11 +161,10 @@
             ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.fillStyle = "#33ff33";
-            ctx.font = `${fontSize}px Courier New`;
-
             drops.forEach((y, x) => {
                 const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillStyle = Math.random() > 0.5 ? "#33ff33" : "#ff3333";
+                ctx.font = `${fontSize}px Courier New`;
                 ctx.fillText(text, x * fontSize, y * fontSize);
 
                 if (y * fontSize > canvas.height && Math.random() > 0.975) {
@@ -153,7 +176,6 @@
 
         setInterval(drawMatrix, 50);
 
-        // Adjust canvas size on window resize
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -163,6 +185,20 @@
         window.onload = () => {
             document.getElementById('hackerVoice').play();
         };
+
+        // Create dynamic popup
+        function showPopup(message, type) {
+            const popup = document.createElement('div');
+            popup.className = `popup ${type}`;
+            popup.textContent = message;
+            document.body.appendChild(popup);
+
+            setTimeout(() => {
+                popup.style.opacity = "0";
+                popup.style.transform = "scale(0.9)";
+                setTimeout(() => popup.remove(), 500);
+            }, 2000);
+        }
 
         // Handle login form submission
         document.getElementById('loginForm').addEventListener('submit', function (event) {
@@ -178,13 +214,13 @@
 
             if (username === 'Dissa' && password === 'Dissa') {
                 successVoice.play();
+                showPopup("Login Successful! Redirecting...", "success");
                 setTimeout(() => {
-                    //alert("Login Successful! Redirecting...");
                     window.location.href = "https://disindu123.github.io/Disindu-web/"; // Replace with your destination URL
-                }, 1000);
+                }, 2000);
             } else {
                 errorVoice.play();
-                //alert("Invalid username or password! Try again.");
+                showPopup("Invalid username or password! Try again.", "error");
             }
         });
     </script>
